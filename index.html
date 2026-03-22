@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nano — AI Support</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Welcome / Intro Hero ── -->
+  <div id="welcome-screen">
+
+    <!-- Particle field -->
+    <div class="particles" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Background rings -->
+    <div class="bg-rings" aria-hidden="true">
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+      <div class="ring ring-3"></div>
+    </div>
+
+    <!-- Hero layout -->
+    <div class="hero-layout">
+
+      <!-- Left: text content -->
+      <div class="hero-left">
+        <div class="hero-tag">AI Support</div>
+        <h1 class="hero-title">Meet <span class="accent-word">Nano</span></h1>
+        <p class="hero-sub">Your intelligent assistant for support,<br>bookings, and answers — always on.</p>
+        <div class="hero-pills">
+          <span class="pill">FAQ</span>
+          <span class="pill">Tickets</span>
+          <span class="pill">Bookings</span>
+        </div>
+        <div class="hero-loader">
+          <div class="loader-track"><div class="loader-fill"></div></div>
+          <span class="loader-label">Initializing Nano…</span>
+        </div>
+      </div>
+
+      <!-- Right: Nano robot + holographic panel -->
+      <div class="hero-right">
+
+        <!-- Holographic info panel -->
+        <div class="holo-panel" id="holo-panel">
+          <div class="holo-line"></div>
+          <div class="holo-row"><span class="holo-key">Status</span><span class="holo-val online">Online</span></div>
+          <div class="holo-row"><span class="holo-key">Version</span><span class="holo-val">v2.4.1</span></div>
+          <div class="holo-row"><span class="holo-key">Mode</span><span class="holo-val">Support AI</span></div>
+          <div class="holo-line"></div>
+        </div>
+
+        <!-- CSS Nano Robot -->
+        <div class="nano-robot" id="nano-robot">
+
+          <!-- Antenna -->
+          <div class="robot-antenna">
+            <div class="antenna-ball"></div>
+            <div class="antenna-stem"></div>
+          </div>
+
+          <!-- Head -->
+          <div class="robot-head">
+            <!-- Visor / Eyes -->
+            <div class="robot-visor">
+              <div class="visor-eye left"></div>
+              <div class="visor-eye right"></div>
+              <div class="visor-glow"></div>
+            </div>
+            <!-- Ear panels -->
+            <div class="robot-ear left"></div>
+            <div class="robot-ear right"></div>
+          </div>
+
+          <!-- Neck -->
+          <div class="robot-neck"></div>
+
+          <!-- Body -->
+          <div class="robot-body">
+            <!-- Chest panel -->
+            <div class="chest-panel">
+              <div class="chest-dot"></div>
+              <div class="chest-dot"></div>
+              <div class="chest-dot"></div>
+            </div>
+          </div>
+
+          <!-- Shadow -->
+          <div class="robot-shadow"></div>
+
+        </div><!-- /nano-robot -->
+
+      </div><!-- /hero-right -->
+    </div><!-- /hero-layout -->
+  </div><!-- /welcome-screen -->
+
+  <!-- ── Chat ── -->
+  <div id="chat-container">
+    <div id="chat-header">
+      <div class="avatar">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="11" r="3.5" fill="white"/>
+          <circle cx="11" cy="3"  r="1.8" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="11" cy="19" r="1.8" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="3"  cy="11" r="1.8" fill="rgba(255,255,255,0.5)"/>
+          <circle cx="19" cy="11" r="1.8" fill="rgba(255,255,255,0.5)"/>
+          <line x1="11" y1="7.5"  x2="11" y2="4.8"  stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+          <line x1="11" y1="14.5" x2="11" y2="17.2" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+          <line x1="7.5" y1="11"  x2="4.8" y2="11"  stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+          <line x1="14.5" y1="11" x2="17.2" y2="11" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="info">
+        <div class="name">Nano</div>
+        <div class="status">Online</div>
+      </div>
+    </div>
+    <div id="chat-box"></div>
+    <div id="input-area">
+      <input type="text" id="user-input" placeholder="Type a message…" autocomplete="off" />
+      <button id="send-btn">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"
+                stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="welcome.js"></script>
+</body>
+</html>
