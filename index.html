@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nano — AI Support</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -9,6 +10,9 @@
 
   <!-- ── Welcome / Intro Hero ── -->
   <div id="welcome-screen">
+
+    <!-- Background grid overlay -->
+    <div class="bg-grid" aria-hidden="true"></div>
 
     <!-- Particle field -->
     <div class="particles" aria-hidden="true">
@@ -30,29 +34,65 @@
 
       <!-- Left: text content -->
       <div class="hero-left">
-        <div class="hero-tag">AI Support</div>
-        <h1 class="hero-title">Meet <span class="accent-word">Nano</span></h1>
+
+        <div class="hero-tag">AI Support Assistant</div>
+
+        <h1 class="hero-title">
+          <span class="hero-title-meet">Meet</span>
+          <span class="accent-word">Nano</span>
+        </h1>
+
         <p class="hero-sub">Your intelligent assistant for support,<br>bookings, and answers — always on.</p>
-        <div class="hero-pills">
-          <span class="pill">FAQ</span>
-          <span class="pill">Tickets</span>
-          <span class="pill">Bookings</span>
+
+        <!-- Feature cards (replacing pills) -->
+        <div class="feature-cards">
+          <div class="feat-card">
+            <span class="feat-icon">❓</span>
+            <div class="feat-info">
+              <span class="feat-label">FAQ</span>
+              <span class="feat-desc">Instant answers</span>
+            </div>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon">🎫</span>
+            <div class="feat-info">
+              <span class="feat-label">Tickets</span>
+              <span class="feat-desc">Report issues</span>
+            </div>
+          </div>
+          <div class="feat-card">
+            <span class="feat-icon">📅</span>
+            <div class="feat-info">
+              <span class="feat-label">Bookings</span>
+              <span class="feat-desc">Schedule time</span>
+            </div>
+          </div>
         </div>
+
         <div class="hero-loader">
           <div class="loader-track"><div class="loader-fill"></div></div>
           <span class="loader-label">Initializing Nano…</span>
         </div>
+
       </div>
 
       <!-- Right: Nano robot + holographic panel -->
       <div class="hero-right">
 
+        <!-- Orbit rings -->
+        <div class="robot-orbit orbit-1" aria-hidden="true"></div>
+        <div class="robot-orbit orbit-2" aria-hidden="true"></div>
+
+        <!-- Glow platform under robot -->
+        <div class="robot-platform" aria-hidden="true"></div>
+
         <!-- Holographic info panel -->
         <div class="holo-panel" id="holo-panel">
           <div class="holo-line"></div>
-          <div class="holo-row"><span class="holo-key">Status</span><span class="holo-val online">Online</span></div>
+          <div class="holo-row"><span class="holo-key">Status</span><span class="holo-val online">● Online</span></div>
           <div class="holo-row"><span class="holo-key">Version</span><span class="holo-val">v2.4.1</span></div>
           <div class="holo-row"><span class="holo-key">Mode</span><span class="holo-val">Support AI</span></div>
+          <div class="holo-row"><span class="holo-key">Uptime</span><span class="holo-val uptime">99.9%</span></div>
           <div class="holo-line"></div>
         </div>
 
@@ -67,13 +107,11 @@
 
           <!-- Head -->
           <div class="robot-head">
-            <!-- Visor / Eyes -->
             <div class="robot-visor">
               <div class="visor-eye left"></div>
               <div class="visor-eye right"></div>
               <div class="visor-glow"></div>
             </div>
-            <!-- Ear panels -->
             <div class="robot-ear left"></div>
             <div class="robot-ear right"></div>
           </div>
@@ -83,7 +121,6 @@
 
           <!-- Body -->
           <div class="robot-body">
-            <!-- Chest panel -->
             <div class="chest-panel">
               <div class="chest-dot"></div>
               <div class="chest-dot"></div>
@@ -100,41 +137,222 @@
     </div><!-- /hero-layout -->
   </div><!-- /welcome-screen -->
 
+
   <!-- ── Chat ── -->
   <div id="chat-container">
+
     <div id="chat-header">
       <div class="avatar">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <circle cx="11" cy="11" r="3.5" fill="white"/>
-          <circle cx="11" cy="3"  r="1.8" fill="rgba(255,255,255,0.5)"/>
-          <circle cx="11" cy="19" r="1.8" fill="rgba(255,255,255,0.5)"/>
-          <circle cx="3"  cy="11" r="1.8" fill="rgba(255,255,255,0.5)"/>
-          <circle cx="19" cy="11" r="1.8" fill="rgba(255,255,255,0.5)"/>
-          <line x1="11" y1="7.5"  x2="11" y2="4.8"  stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
-          <line x1="11" y1="14.5" x2="11" y2="17.2" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
-          <line x1="7.5" y1="11"  x2="4.8" y2="11"  stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
-          <line x1="14.5" y1="11" x2="17.2" y2="11" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+        <!-- Mini robot face — matches landing-page robot design language -->
+        <svg width="34" height="30" viewBox="0 0 34 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Antenna -->
+          <circle cx="17" cy="2" r="2.2" fill="#00c6ff" style="filter:drop-shadow(0 0 4px #00c6ff)"/>
+          <line x1="17" y1="4.2" x2="17" y2="7" stroke="rgba(0,198,255,0.65)" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- Ears (subtle) -->
+          <rect x="1" y="14" width="4" height="8" rx="2" fill="#c2caee" opacity="0.7"/>
+          <rect x="29" y="14" width="4" height="8" rx="2" fill="#c2caee" opacity="0.7"/>
+          <!-- Head shape -->
+          <rect x="5" y="7" width="24" height="20" rx="7" fill="url(#avHead)"/>
+          <!-- Visor -->
+          <rect x="8" y="12" width="18" height="10" rx="4" fill="#001a3a"/>
+          <rect x="8" y="12" width="18" height="10" rx="4" fill="none" stroke="rgba(0,198,255,0.55)" stroke-width="1"/>
+          <!-- Visor top glow -->
+          <rect x="8" y="12" width="18" height="4" rx="4" fill="rgba(0,198,255,0.07)"/>
+          <!-- Eyes -->
+          <circle cx="13.5" cy="17" r="3" fill="url(#avEye1)"/>
+          <circle cx="20.5" cy="17" r="3" fill="url(#avEye2)"/>
+          <defs>
+            <linearGradient id="avHead" x1="5" y1="7" x2="29" y2="27" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#e8ecff"/>
+              <stop offset="55%"  stop-color="#c4caee"/>
+              <stop offset="100%" stop-color="#9fa8d0"/>
+            </linearGradient>
+            <radialGradient id="avEye1" cx="30%" cy="30%">
+              <stop offset="0%"   stop-color="#a0f0ff"/>
+              <stop offset="100%" stop-color="#00c6ff"/>
+            </radialGradient>
+            <radialGradient id="avEye2" cx="30%" cy="30%">
+              <stop offset="0%"   stop-color="#a0f0ff"/>
+              <stop offset="100%" stop-color="#00c6ff"/>
+            </radialGradient>
+          </defs>
         </svg>
       </div>
       <div class="info">
-        <div class="name">Nano</div>
-        <div class="status">Online</div>
+        <div class="name">Nano <span class="name-badge">AI</span></div>
+        <div class="status">Online · always ready</div>
+      </div>
+      <div class="header-right">
+        <div class="header-caps">
+          <span>FAQ</span>
+          <span>Tickets</span>
+          <span>Bookings</span>
+        </div>
       </div>
     </div>
-    <div id="chat-box"></div>
+
+    <!-- Gradient accent line below header -->
+    <div class="header-accent-line" aria-hidden="true"></div>
+
+    <div id="chat-box">
+      <!-- Empty state shown before first message -->
+      <div class="chat-empty-state" id="chat-empty">
+        <div class="empty-icon">
+          <svg width="28" height="28" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="3.5" fill="rgba(108,99,255,0.7)"/>
+            <circle cx="11" cy="3"  r="1.8" fill="rgba(108,99,255,0.35)"/>
+            <circle cx="11" cy="19" r="1.8" fill="rgba(108,99,255,0.35)"/>
+            <circle cx="3"  cy="11" r="1.8" fill="rgba(108,99,255,0.35)"/>
+            <circle cx="19" cy="11" r="1.8" fill="rgba(108,99,255,0.35)"/>
+            <line x1="11" y1="7.5"  x2="11" y2="4.8"  stroke="rgba(108,99,255,0.3)" stroke-width="1.2"/>
+            <line x1="11" y1="14.5" x2="11" y2="17.2" stroke="rgba(108,99,255,0.3)" stroke-width="1.2"/>
+            <line x1="7.5" y1="11"  x2="4.8" y2="11"  stroke="rgba(108,99,255,0.3)" stroke-width="1.2"/>
+            <line x1="14.5" y1="11" x2="17.2" y2="11" stroke="rgba(108,99,255,0.3)" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <p class="empty-title">How can I help?</p>
+        <p class="empty-sub">Ask about bookings, support tickets, pricing, hours, or anything else.</p>
+        <div class="empty-chips">
+          <button class="chip-btn" onclick="fillInput('I want to book an appointment')">📅 Book time</button>
+          <button class="chip-btn" onclick="fillInput('I have an issue')">🎫 Report issue</button>
+          <button class="chip-btn" onclick="fillInput('What are your hours?')">❓ FAQ</button>
+        </div>
+      </div>
+    </div>
+
     <div id="input-area">
-      <input type="text" id="user-input" placeholder="Type a message…" autocomplete="off" />
-      <button id="send-btn">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"
-                stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round"/>
+      <div class="input-platform">
+        <input type="text" id="user-input" placeholder="Ask Nano anything…" autocomplete="off" />
+        <button id="send-btn">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"
+                  stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /chat-container -->
+
+  <!-- ── Floating side assistant icon ── -->
+  <div class="side-assistant" id="side-assistant" aria-hidden="true">
+    <div class="side-assistant-inner">
+      <!-- Breathing halo glow (floats with the robot) -->
+      <div class="side-robot-halo" aria-hidden="true"></div>
+      <!-- Robot — receives hover scale/glow independently of the float animation -->
+      <div class="side-assistant-robot">
+        <svg width="46" height="56" viewBox="0 0 46 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Antenna -->
+          <circle cx="23" cy="3" r="3" fill="#00c6ff" style="filter:drop-shadow(0 0 6px #00c6ff)"/>
+          <line x1="23" y1="6" x2="23" y2="10" stroke="rgba(0,198,255,0.65)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Ears -->
+          <rect x="0" y="20" width="6" height="12" rx="3" fill="#c2caee" opacity="0.75"/>
+          <rect x="40" y="20" width="6" height="12" rx="3" fill="#c2caee" opacity="0.75"/>
+          <!-- Head -->
+          <rect x="6" y="10" width="34" height="30" rx="10" fill="url(#sideHead)"/>
+          <!-- Visor -->
+          <rect x="11" y="18" width="24" height="14" rx="5" fill="#001a3a"/>
+          <rect x="11" y="18" width="24" height="14" rx="5" fill="none" stroke="rgba(0,198,255,0.55)" stroke-width="1.2"/>
+          <!-- Visor glow -->
+          <rect x="11" y="18" width="24" height="6" rx="5" fill="rgba(0,198,255,0.07)"/>
+          <!-- Eyes — class="side-eye" enables the blink animation -->
+          <circle class="side-eye" cx="19" cy="25" r="4" fill="url(#sideEye1)"/>
+          <circle class="side-eye" cx="27" cy="25" r="4" fill="url(#sideEye2)"/>
+          <!-- Body (small) -->
+          <rect x="10" y="42" width="26" height="12" rx="7" fill="url(#sideBody)" opacity="0.85"/>
+          <!-- Chest dots -->
+          <circle cx="19" cy="48" r="2" fill="rgba(0,198,255,0.7)"/>
+          <circle cx="23" cy="48" r="2" fill="rgba(108,99,255,0.8)"/>
+          <circle cx="27" cy="48" r="2" fill="rgba(0,198,255,0.7)"/>
+          <defs>
+            <linearGradient id="sideHead" x1="6" y1="10" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#e8ecff"/>
+              <stop offset="55%"  stop-color="#c4caee"/>
+              <stop offset="100%" stop-color="#9fa8d0"/>
+            </linearGradient>
+            <linearGradient id="sideBody" x1="10" y1="42" x2="36" y2="54" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#d8ddf0"/>
+              <stop offset="100%" stop-color="#9fa8d0"/>
+            </linearGradient>
+            <radialGradient id="sideEye1" cx="30%" cy="30%">
+              <stop offset="0%"   stop-color="#a0f0ff"/>
+              <stop offset="100%" stop-color="#00c6ff"/>
+            </radialGradient>
+            <radialGradient id="sideEye2" cx="30%" cy="30%">
+              <stop offset="0%"   stop-color="#a0f0ff"/>
+              <stop offset="100%" stop-color="#00c6ff"/>
+            </radialGradient>
+          </defs>
         </svg>
-      </button>
+      </div>
     </div>
   </div>
 
+  <!-- Trailing mouse glow + spotlight overlays -->
+  <div id="mouse-glow" aria-hidden="true"></div>
+  <div id="spotlight"  aria-hidden="true"></div>
+
   <script src="script.js"></script>
+  <script>
+    // Quick-fill chips
+    function fillInput(text) {
+      const inp = document.getElementById('user-input');
+      inp.value = text;
+      inp.focus();
+    }
+    // Hide empty state once first message appears
+    (function () {
+      const box = document.getElementById('chat-box');
+      const obs = new MutationObserver(function () {
+        const empty = document.getElementById('chat-empty');
+        if (empty && box.querySelector('.message')) {
+          empty.style.display = 'none';
+          obs.disconnect();
+        }
+      });
+      obs.observe(box, { childList: true });
+    })();
+    // Show side assistant when chat becomes visible
+    (function () {
+      const chat = document.getElementById('chat-container');
+      const side = document.getElementById('side-assistant');
+      const clsObs = new MutationObserver(function () {
+        if (chat.classList.contains('visible')) {
+          side.classList.add('visible');
+          clsObs.disconnect();
+        }
+      });
+      clsObs.observe(chat, { attributes: true, attributeFilter: ['class'] });
+    })();
+    // Randomised eye blink — fires every 2–5.5 seconds
+    (function () {
+      var sa = document.getElementById('side-assistant');
+      function blink() {
+        sa.classList.add('blinking');
+        setTimeout(function () {
+          sa.classList.remove('blinking');
+          setTimeout(blink, 1800 + Math.random() * 3700);
+        }, 220);
+      }
+      setTimeout(blink, 1200 + Math.random() * 2000);
+    })();
+  </script>
+  <script>
+    // Trailing mouse glow — rAF lerp on transform only (GPU composited, zero reflow)
+    (function () {
+      var glow = document.getElementById('mouse-glow');
+      var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      var cx = mx, cy = my;
+      document.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; });
+      (function tick() {
+        cx += (mx - cx) * 0.065;
+        cy += (my - cy) * 0.065;
+        glow.style.transform = 'translate(' + (cx - 220) + 'px, ' + (cy - 220) + 'px)';
+        requestAnimationFrame(tick);
+      })();
+    })();
+  </script>
   <script src="welcome.js"></script>
 </body>
 </html>

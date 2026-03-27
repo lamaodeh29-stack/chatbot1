@@ -43,13 +43,18 @@ const faqs = [
 function getFAQReply(message) {
     const msg = message.toLowerCase().trim();
 
+    let bestMatch = null;
+    let bestScore = 0;
+
     for (const faq of faqs) {
-        for (const keyword of faq.keywords) {
-            if (msg.includes(keyword)) return faq.answer;
+        const score = faq.keywords.filter(k => msg.includes(k)).length;
+        if (score > bestScore) {
+            bestScore = score;
+            bestMatch = faq.answer;
         }
     }
 
-    return null;
+    return bestMatch;
 }
 
 module.exports = { getFAQReply };

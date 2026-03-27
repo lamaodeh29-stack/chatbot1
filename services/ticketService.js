@@ -17,14 +17,15 @@ function detectPriority(message) {
 }
 
 
-async function createTicket(message) {
+// Create a ticket — called only after user details are collected
+async function createTicket(message, name, phone, email) {
     const priority = detectPriority(message);
 
     const result = await pool.query(
-        `INSERT INTO tickets (message, status, priority)
-         VALUES ($1, $2, $3)
+        `INSERT INTO tickets (message, status, priority, name, phone, email)
+         VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING *`,
-        [message, 'open', priority]
+        [message, 'open', priority, name, phone, email]
     );
 
     const ticket = result.rows[0];

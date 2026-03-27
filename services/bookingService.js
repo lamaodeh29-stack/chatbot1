@@ -7,23 +7,67 @@
 const pool = require('../db');
 
 
-// Get all available slots from the database
-async function getAvailableSlots() {
-    const result = await pool.query('SELECT day, time FROM available_slots ORDER BY id');
-    const slots  = result.rows;
+// ── Schedule constants ──
+const WORKING_DAYS       = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const BOOKING_START_HOUR = 7;   // 7:00am
+const BOOKING_END_HOUR   = 19;  // 7:00pm
 
-    // Group times under each day
-    const grouped = {};
-    for (const slot of slots) {
-        if (!grouped[slot.day]) grouped[slot.day] = [];
-        grouped[slot.day].push(slot.time);
+// Convert a 24h hour (7..19) to the app's display format: "7:00am", "12:00pm", "1:00pm"
+function hourToSlotString(h) {
+    if (h < 12)  return `${h}:00am`;
+    if (h === 12) return `12:00pm`;
+    return `${h - 12}:00pm`;
+}
+
+// All hourly slot strings for the booking window
+function generateAllTimeSlots() {
+    const slots = [];
+    for (let h = BOOKING_START_HOUR; h <= BOOKING_END_HOUR; h++) {
+        slots.push(hourToSlotString(h));
     }
+    return slots; // ["7:00am","8:00am",...,"7:00pm"]
+}
 
+// Parse a time string → total minutes from midnight (-1 on failure)
+function timeToMinutes(timeStr) {
+    const match = timeStr.toLowerCase().trim().match(/^(\d+):(\d+)(am|pm)$/);
+    if (!match) return -1;
+    let h = parseInt(match[1]);
+    const m = parseInt(match[2]);
+    const period = match[3];
+    if (period === 'pm' && h !== 12) h += 12;
+    if (period === 'am' && h === 12) h = 0;
+    return h * 60 + m;
+}
+
+function isWithinBookingHours(timeStr) {
+    const mins = timeToMinutes(timeStr);
+    return mins >= BOOKING_START_HOUR * 60 && mins <= BOOKING_END_HOUR * 60;
+}
+
+
+// Generate the full Mon–Fri schedule (7am–7pm hourly) then remove confirmed bookings
+async function getAvailableSlots() {
+    const bookedResult = await pool.query(
+        "SELECT LOWER(day) as day, LOWER(time) as time FROM bookings WHERE status = 'confirmed'"
+    );
+    const booked = new Set(bookedResult.rows.map(r => `${r.day}|${r.time}`));
+
+    const allTimes = generateAllTimeSlots();
+    const grouped  = {};
+
+    for (const day of WORKING_DAYS) {
+        const available = allTimes.filter(time => {
+            const key = `${day.toLowerCase()}|${time.toLowerCase()}`;
+            return !booked.has(key);
+        });
+        if (available.length > 0) grouped[day] = available;
+    }
     return grouped;
 }
 
 
-// Format slots into a readable string for the chat
+// Format available slots into a readable string for the chat
 async function formatSlots() {
     const grouped = await getAvailableSlots();
     return Object.entries(grouped)
@@ -32,75 +76,55 @@ async function formatSlots() {
 }
 
 
-// Check if a slot is valid (exists in available_slots)
+// A slot is valid if: working day + within hours + on the hour (no half-past etc.)
 async function isValidSlot(day, time) {
-    const result = await pool.query(
-        'SELECT * FROM available_slots WHERE LOWER(day) = LOWER($1) AND LOWER(time) = LOWER($2)',
-        [day, time]
-    );
-    return result.rows.length > 0;
+    const isWorkingDay = WORKING_DAYS.some(d => d.toLowerCase() === day.toLowerCase());
+    if (!isWorkingDay) return false;
+
+    if (!isWithinBookingHours(time)) return false;
+
+    // Must land exactly on an hour mark (minutes === 0)
+    const match = time.toLowerCase().trim().match(/^(\d+):(\d+)(am|pm)$/);
+    if (!match || parseInt(match[2]) !== 0) return false;
+
+    return true;
 }
 
 
-// Check if a slot is already booked
+// Check if a slot is already taken by a confirmed booking
 async function isSlotTaken(day, time) {
     const result = await pool.query(
         `SELECT * FROM bookings
          WHERE LOWER(day) = LOWER($1)
          AND LOWER(time) = LOWER($2)
-         AND status != 'cancelled'`,
+         AND status = 'confirmed'`,
         [day, time]
     );
     return result.rows.length > 0;
 }
 
 
-// Create a booking (no day/time yet — user hasn't picked one)
-async function createBooking(message) {
-    const result = await pool.query(
-        `INSERT INTO bookings (message, status)
-         VALUES ($1, $2)
-         RETURNING *`,
-        [message, 'pending']
-    );
-    const booking = result.rows[0];
-    console.log('Booking saved to database:', booking);
-    return booking;
-}
-
-
-// Confirm a booking with a specific day and time
-async function confirmBooking(bookingId, day, time) {
-    // Check slot is valid
+// Save a fully confirmed booking — called only after user explicitly confirms
+// Nothing is written to the DB before this point
+async function confirmBooking(day, time, name, phone, email, message) {
+    // Re-validate slot is still valid and not taken
     const valid = await isValidSlot(day, time);
     if (!valid) return { success: false, reason: 'invalid_slot' };
 
-    // Check slot is not already taken
     const taken = await isSlotTaken(day, time);
     if (taken) return { success: false, reason: 'slot_taken' };
 
-    // Update the booking with the chosen day and time
     const result = await pool.query(
-        `UPDATE bookings
-         SET day = $1, time = $2, status = 'confirmed'
-         WHERE id = $3
+        `INSERT INTO bookings (message, day, time, status, name, phone, email)
+         VALUES ($1, $2, $3, 'confirmed', $4, $5, $6)
          RETURNING *`,
-        [day, time, bookingId]
+        [message || `${day} ${time}`, day, time, name, phone, email]
     );
 
     const booking = result.rows[0];
-    console.log('Booking confirmed:', booking);
+    console.log('Booking confirmed and saved:', booking);
     return { success: true, booking };
 }
 
 
-// Get the most recent pending booking
-async function getLatestPendingBooking() {
-    const result = await pool.query(
-        `SELECT * FROM bookings WHERE status = 'pending' ORDER BY created_at DESC LIMIT 1`
-    );
-    return result.rows[0] || null;
-}
-
-
-module.exports = { createBooking, confirmBooking, formatSlots, getLatestPendingBooking, isValidSlot, isSlotTaken };
+module.exports = { confirmBooking, formatSlots, isValidSlot, isSlotTaken };
