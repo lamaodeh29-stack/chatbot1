@@ -1,13 +1,13 @@
 
-const chatBox       = document.getElementById('chat-box');
-const userInput     = document.getElementById('user-input');
-const sendBtn       = document.getElementById('send-btn');
+const chatBox = document.getElementById('chat-box');
+const userInput = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
 const sideAssistant = document.getElementById('side-assistant');
 
 const SUGGESTIONS = [
-  { label: '📅 Book time',    text: 'I want to book an appointment' },
-  { label: '🎫 Report issue', text: 'I have an issue I want to report' },
-  { label: '❓ FAQ',          text: 'What are your hours?' },
+    { label: '📅 Book time', text: 'I want to book an appointment' },
+    { label: '🎫 Report issue', text: 'I have an issue I want to report' },
+    { label: '❓ FAQ', text: 'What are your hours?' },
 ];
 
 function addMessage(text, sender) {
@@ -75,10 +75,10 @@ async function sendMessage() {
     showTyping();
 
     try {
-        const res  = await fetch('/chat', {
-            method:  'POST',
+        const res = await fetch('/api/chat', {
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ message: text }),
+            body: JSON.stringify({ message: userMessage }),
         });
         const data = await res.json();
         await new Promise(r => setTimeout(r, 500));
